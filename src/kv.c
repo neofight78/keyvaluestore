@@ -42,7 +42,7 @@ size_t hash(char *value, int capacity) {
 //  - db:       a pointer to the db
 //  - key:      a pointer to the key value
 //  - value:    a pointer to the value itself
-// returns: the index of the key, otherwise on
+// returns: 0 if successful otherwise on
 // error, returns -1, on table full returns -2
 int kv_put(kv_t *db, char *key, char *value) {
     if(!db || !key || !value) return -1;
@@ -58,7 +58,7 @@ int kv_put(kv_t *db, char *key, char *value) {
             char *new_value = strdup(value);
             if (!new_value) return -1;
             entry->value = new_value;
-            return real_idx;
+            return 0;
         }
 
         if (!entry->key || entry->key == (void*)TOMBSTONE) {
@@ -72,7 +72,7 @@ int kv_put(kv_t *db, char *key, char *value) {
             entry->key = new_key;
             entry->value = new_value;
             db->count++;
-            return real_idx;
+            return 0;
         }
     }
 
