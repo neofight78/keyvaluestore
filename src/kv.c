@@ -26,7 +26,7 @@ kv_t *kv_init(size_t capacity) {
 size_t hash(char *value, int capacity) {
     size_t hash = 0x13371337deadbeef;
 
-    while(*value) {
+    while (*value) {
         hash ^= *value;
         hash = hash << 8;
         hash += *value;
@@ -44,7 +44,7 @@ size_t hash(char *value, int capacity) {
 // returns: the index of the deletion
 // -1 if not found
 int kv_delete(kv_t *db, char *key) {
-    if(!db || !key) return -1;
+    if (!db || !key) return -1;
 
     size_t idx = hash(key, db->capacity);
 
@@ -57,11 +57,12 @@ int kv_delete(kv_t *db, char *key) {
             return -1;
         }
 
-        if(entry->key && entry->key != (void*)TOMBSTONE && !strcmp(entry->key, key)) {
+        if (entry->key && entry->key != (void *)TOMBSTONE &&
+            !strcmp(entry->key, key)) {
             free(entry->key);
             free(entry->value);
             db->count--;
-            entry->key = (void*)TOMBSTONE;
+            entry->key = (void *)TOMBSTONE;
             entry->value = NULL;
             return real_idx;
         }
@@ -77,7 +78,7 @@ int kv_delete(kv_t *db, char *key) {
 // returns: the pointer to the key
 // NULL if not found
 char *kv_get(kv_t *db, char *key) {
-    if(!db || !key) return NULL;
+    if (!db || !key) return NULL;
 
     size_t idx = hash(key, db->capacity);
 
@@ -90,7 +91,8 @@ char *kv_get(kv_t *db, char *key) {
             return NULL;
         }
 
-        if (entry->key && entry->key != (void*)TOMBSTONE && !strcmp(entry->key, key)) {
+        if (entry->key && entry->key != (void *)TOMBSTONE &&
+            !strcmp(entry->key, key)) {
             return entry->value;
         }
     }
@@ -106,7 +108,7 @@ char *kv_get(kv_t *db, char *key) {
 // returns: 0 if successful otherwise on
 // error, returns -1, on table full returns -2
 int kv_put(kv_t *db, char *key, char *value) {
-    if(!db || !key || !value) return -1;
+    if (!db || !key || !value) return -1;
 
     size_t idx = hash(key, db->capacity);
 
@@ -115,14 +117,15 @@ int kv_put(kv_t *db, char *key, char *value) {
 
         kv_entry_t *entry = &db->entries[real_idx];
 
-        if (entry->key && entry->key != (void*)TOMBSTONE && !strcmp(entry->key, key)) {
+        if (entry->key && entry->key != (void *)TOMBSTONE &&
+            !strcmp(entry->key, key)) {
             char *new_value = strdup(value);
             if (!new_value) return -1;
             entry->value = new_value;
             return 0;
         }
 
-        if (!entry->key || entry->key == (void*)TOMBSTONE) {
+        if (!entry->key || entry->key == (void *)TOMBSTONE) {
             char *new_key = strdup(key);
             char *new_value = strdup(value);
             if (!new_key || !new_value) {

@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <kv.h>
+#include <stdio.h>
 
 int main() {
     kv_t *table = kv_init(1024);
