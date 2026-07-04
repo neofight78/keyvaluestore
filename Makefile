@@ -1,5 +1,5 @@
 CC		= gcc
-CFLAGS	= -Iinc -Wall -Wextra
+CFLAGS	= -Iinc -Wall -Wextra -g
 
 SRC	= src/kv.c src/main.c
 OUT	= bin/kv
@@ -14,3 +14,6 @@ $(OUT): $(SRC)
 
 format:
 	clang-format -i $(SRC) inc/*.h
+
+valgrind: $(OUT)
+	valgrind --leak-check=full --show-leak-kinds=all ./$(OUT)

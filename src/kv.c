@@ -121,6 +121,7 @@ int kv_put(kv_t *db, char *key, char *value) {
             !strcmp(entry->key, key)) {
             char *new_value = strdup(value);
             if (!new_value) return -1;
+            free(entry->value);
             entry->value = new_value;
             return 0;
         }
@@ -141,4 +142,29 @@ int kv_put(kv_t *db, char *key, char *value) {
     }
 
     return -2;
+}
+
+// fn kv_free
+// params:
+//  - db:       a pointer to the db
+// returns: 0 on success, -1 on failure
+int kv_free(kv_t *db) {
+    if (!db) return -1;
+
+    for (size_t i = 0; i < db->capacity - 1; i++) {
+        kv_entry_t *e = &db->entries[i];
+
+        if (e->key && e->key != (void *)TOMBSTONE) {
+            free(e->key);
+            free(e->value);
+            e->key = NULL;
+            e->value = NULL;
+            db->count--;
+        }
+    }
+
+    free(db->entries);
+    free(db);
+
+    return 0;
 }
