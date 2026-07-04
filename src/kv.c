@@ -148,9 +148,8 @@ int kv_put(kv_t *db, char *key, char *value) {
 // fn kv_free
 // params:
 //  - db:       a pointer to the db
-// returns: 0 on success, -1 on failure
-int kv_free(kv_t *db) {
-    if (!db) return -1;
+void kv_free(kv_t *db) {
+    if (!db) return;
 
     for (size_t i = 0; i < db->capacity - 1; i++) {
         kv_entry_t *e = &db->entries[i];
@@ -166,6 +165,4 @@ int kv_free(kv_t *db) {
 
     free(db->entries);
     free(db);
-
-    return 0;
 }
